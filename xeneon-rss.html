@@ -1,61 +1,59 @@
-
-
-
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <title>XENEON EDGE RSS Wall</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #000;          /* 全面黒背景 */
-      color: #fff;
-      overflow: hidden;
-    }
-    #frame-wrapper {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>XENEON | 欧米ニュース</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,"Noto Sans JP",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:#090d16;color:#f2f5fc}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;background:#141d30;border-bottom:1px solid #30405e}
+h1{font-size:19px;margin:0}small{color:#aebcd0}button,a{font:inherit}
+.controls{display:flex;gap:8px;flex-wrap:wrap}
+button{color:white;background:#253c61;border:1px solid #526a8b;border-radius:6px;padding:8px 12px;cursor:pointer}
+button:hover{background:#35537c}
+#wall{width:100%;height:calc(100dvh - 76px);border:0;background:#fff}
+#sources{display:none;padding:22px;max-width:1150px;margin:auto}
+#sources h2{font-size:21px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+article{background:#151f32;border:1px solid #30405e;padding:16px;border-radius:10px}
+article h3{margin:0 0 9px}article p{font-size:14px;color:#abbcd1}
+article a{color:#94c7ff}
+#note{padding:10px 18px;color:#aebcd0;font-size:12px}
+@media(max-width:630px){header{align-items:flex-start;flex-direction:column}#wall{height:calc(100dvh - 126px)}}
+</style>
 </head>
 <body>
-  <div id="frame-wrapper">
-    <iframe
-      id="rssWall"
-      src="https://rss.app/embed/v1/wall/1Ls2C1t5ZsaWeT4q">
-    </iframe>
-  </div>
-
-  <script>
-    // ===== 設定：リロード間隔（ミリ秒） =====
-    // Basicプランなら60分程度、Proなら15〜20分程度がおすすめ
-    const REFRESH_INTERVAL_MS = 60 * 60 * 1000; // 60分ごと
-
-    const iframe = document.getElementById('rssWall');
-    const baseUrl = "https://rss.app/embed/v1/wall/1Ls2C1t5ZsaWeT4q";
-
-    function refreshIframe() {
-      // キャッシュを避けるため、クエリに時間を付ける
-      iframe.src = baseUrl + "?t=" + Date.now();
-    }
-
-    // 一定間隔で自動リロード
-    setInterval(refreshIframe, REFRESH_INTERVAL_MS);
-  </script>
+<header><div><h1>XENEON 欧米ニュース</h1><small>US / Europe — RSS News Wall</small></div>
+<div class="controls"><button id="showWall" aria-pressed="true">RSSニュース一覧</button><button id="showSources" aria-pressed="false">ニュース媒体一覧</button><button id="reload">更新</button></div></header>
+<main>
+<iframe id="wall" title="欧米ニュースRSSウォール" referrerpolicy="strict-origin-when-cross-origin" loading="eager" src="https://rss.app/embed/v1/wall/1Ls2C1t5ZsaWeT4q"></iframe>
+<section id="sources"><h2>欧米ニュース媒体</h2><p>RSSウォールが表示されない場合はこちらから各媒体の最新記事を確認できます。RSSウォール自体の配信・契約状況は外部サービス rss.app に依存します。</p>
+<div class="grid">
+<article><h3>Reuters</h3><p>国際・政治・経済</p><a href="https://www.reuters.com/world/" target="_blank" rel="noopener noreferrer">World News ↗</a></article>
+<article><h3>Associated Press</h3><p>米国・世界の速報</p><a href="https://apnews.com/world-news" target="_blank" rel="noopener noreferrer">World News ↗</a></article>
+<article><h3>BBC News</h3><p>英国・欧州・国際</p><a href="https://www.bbc.com/news" target="_blank" rel="noopener noreferrer">BBC News ↗</a></article>
+<article><h3>Deutsche Welle</h3><p>ドイツ・欧州ニュース</p><a href="https://www.dw.com/en/top-stories/s-9097" target="_blank" rel="noopener noreferrer">Top Stories ↗</a></article>
+<article><h3>France 24</h3><p>フランス・欧州・国際</p><a href="https://www.france24.com/en/" target="_blank" rel="noopener noreferrer">English News ↗</a></article>
+<article><h3>POLITICO Europe</h3><p>EU政策・欧州政治</p><a href="https://www.politico.eu/" target="_blank" rel="noopener noreferrer">Europe ↗</a></article>
+</div></section>
+</main>
+<div id="note">RSS一覧は外部サービス rss.app を埋め込んでいます。表示されない場合は「ニュース媒体一覧」を選択してください。</div>
+<script>
+const iframe=document.getElementById('wall');
+const wallButton=document.getElementById('showWall');
+const sourceButton=document.getElementById('showSources');
+function show(mode){
+const isWall=mode==='wall';
+iframe.style.display=isWall?'block':'none';
+document.getElementById('sources').style.display=isWall?'none':'block';
+wallButton.setAttribute('aria-pressed',String(isWall));
+sourceButton.setAttribute('aria-pressed',String(!isWall));
+}
+wallButton.addEventListener('click',()=>show('wall'));
+sourceButton.addEventListener('click',()=>show('sources'));
+document.getElementById('reload').addEventListener('click',()=>{iframe.src='https://rss.app/embed/v1/wall/1Ls2C1t5ZsaWeT4q?t='+Date.now();show('wall')});
+setInterval(()=>{if(iframe.style.display!=='none')iframe.src='https://rss.app/embed/v1/wall/1Ls2C1t5ZsaWeT4q?t='+Date.now()},60*60*1000);
+</script>
 </body>
 </html>
